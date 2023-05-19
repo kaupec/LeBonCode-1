@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:create', 'user:read'])]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 100)]src/Entity/User.php src/Entity/User.php
+    #[ORM\Column(length: 100)]
     #[Assert\NotNull]
     #[AssertPhoneNumber]
     #[Groups(['user:create', 'user:read'])]
