@@ -35,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $id;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank]
+    #[Assert\NotNull]
     #[Assert\Email]
     #[Groups(['user:create', 'user:read'])]
     private ?string $email = null;
@@ -46,26 +46,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 100)]
+    #[Assert\NotNull]
+    #[Assert\Length(min:10, max: 100)]
     #[Groups(['user:create'])]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 100)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 200)]
+    #[Assert\NotNull]
+    #[Assert\Length(min:1, max: 200)]
     #[Groups(['user:create', 'user:read'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 100)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 200)]
+    #[Assert\NotNull]
+    #[Assert\Length(min: 2, max: 200)]
     #[Groups(['user:create', 'user:read'])]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 100)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 50)]
+    #[ORM\Column(length: 100)]src/Entity/User.php src/Entity/User.php
+    #[Assert\NotNull]
     #[AssertPhoneNumber]
     #[Groups(['user:create', 'user:read'])]
     private ?string $phoneNumber = null;

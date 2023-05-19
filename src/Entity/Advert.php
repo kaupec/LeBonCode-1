@@ -38,24 +38,27 @@ class Advert
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['advert:input', 'advert:output'])]
     #[Assert\NotNull]
     #[Assert\Length(min: 10, max: 400)]
+    #[Groups(['advert:input', 'advert:output'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['advert:input', 'advert:output'])]
+    #[Assert\NotNull]
     #[Assert\Range(min: 0, max: 10000000)]
+    #[Groups(['advert:input', 'advert:output'])]
     private ?int $price = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotNull]
+    #[Assert\Length(exactly: 5)]
     #[Groups(['advert:input', 'advert:output'])]
-    #[Assert\Length(min: 5, max: 50)]
     private ?string $zip = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['advert:input', 'advert:output'])]
+    #[Assert\NotNull]
     #[Assert\Length(min: 1, max: 250)]
+    #[Groups(['advert:input', 'advert:output'])]
     private ?string $city = null;
 
     #[ORM\Column]
