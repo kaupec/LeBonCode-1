@@ -2,39 +2,76 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AdvertRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: AdvertRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['advert:output']],
+    denormalizationContext: ['groups' => ['advert:input']],
+)]
+#[ApiFilter(SearchFilter::class, properties: ['title' => 'partial'])]
+#[ApiFilter(RangeFilter::class, properties: ['price'])]
 class Advert
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::GUID)]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private ?string $id = null;
+    #[Groups('advert:output')]
+    private string $id;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['advert:input', 'advert:output'])]
+    #[Assert\NotNull]
+    #[Assert\Length(min: 10, max: 250)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['advert:input', 'advert:output'])]
+    #[Assert\NotNull]
+    #[Assert\Length(min: 10, max: 400)]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['advert:input', 'advert:output'])]
+    #[Assert\Range(min: 0, max: 10000000)]
     private ?int $price = null;
 
     #[ORM\Column(length: 30)]
+    #[Groups(['advert:input', 'advert:output'])]
+    #[Assert\Length(min: 5, max: 50)]
     private ?string $zip = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['advert:input', 'advert:output'])]
+    #[Assert\Length(min: 1, max: 250)]
     private ?string $city = null;
 
     #[ORM\Column]
+    #[Groups('advert:output')]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    public function __construct()
+    {
+        $this->id = Uuid::uuid4();;
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = $this->createdAt;
+    }
 
     public function getId(): ?string
     {
