@@ -20,6 +20,9 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[ApiResource(
     normalizationContext: ['groups' => ['advert:output']],
     denormalizationContext: ['groups' => ['advert:input']],
+    openapiContext: [
+        'description' => 'The price is in cents'
+    ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['title' => 'partial'])]
 #[ApiFilter(RangeFilter::class, properties: ['price'])]
@@ -45,7 +48,7 @@ class Advert
 
     #[ORM\Column(nullable: true)]
     #[Assert\NotNull]
-    #[Assert\Range(min: 0, max: 10000000)]
+    #[Assert\Range(min: 0, max: 100000000)]
     #[Groups(['advert:input', 'advert:output'])]
     private ?int $price = null;
 
